@@ -3,7 +3,7 @@ var onlineObj = {};
 var express = require('express');
 var http = require('http');
 var Timer = require('timrjs');
-var timer = Timer(60);
+var timer = Timer(30);
 var app = express();
 var onlineList = [];
 app.use(express.static('public'));
@@ -23,7 +23,6 @@ io.on('connection', function(socket){
     socket.nickname = nickname;
     onlineList.push(nickname);
     socket.broadcast.emit('message', nickname + "<em>" + ' has just logged in' + "</em>");
-    io.emit('userList', onlineList);
     if (!timer.isRunning()){
       console.log(timer);
       timer.ticker(function(formattedTime, percentDone, currentTime, startTime, self){
@@ -31,6 +30,7 @@ io.on('connection', function(socket){
       });
       timer.finish(function(){
         io.emit('gameStart');
+        io.emit('userList', onlineList);
       });
 
       timer.start();

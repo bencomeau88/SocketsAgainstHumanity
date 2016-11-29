@@ -5,14 +5,20 @@
 /*@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');*/
 /*nice grey background color, but does it match? #dbd9da*/
 
+.messages {
+  color:white;
+  text-decoration: none;
+}
+
 .start{
   width:100%;
   font-size:10px;
-  text-align:center;
   padding-top:20px;
   float:left;
+  text-align:center;
   letter-spacing:5px;
   color:white;
+  display:hidden;
 
 }
 
@@ -32,7 +38,7 @@
   float:left;
   overflow:hidden;
   color:white;
-};
+}
 
 .timerWrap {
   color: white;

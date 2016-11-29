@@ -49,7 +49,8 @@ $('.close').on('click', function(){
 
 // function that starts the game once everyone is logged in
 var gameStart = function(){
-
+    console.log('game has started!');
+    timer.hide();
 }
 
 var onlineList = function(nicknames){
