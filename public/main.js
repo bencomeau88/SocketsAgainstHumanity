@@ -1,3 +1,6 @@
+// Global Variables
+var hand = 0;
+
 $(document ).ready(function(){
 var socket = io();
 var messages = $('.messages');
@@ -5,6 +8,8 @@ var nickname = '';
 var modal = $('.nicknameModal');
 var onlineList = $('.onlineList');
 var timer = $('.timer');
+
+
 $('.start').css("cursor", "pointer");
 $('.start').on('click', function(){
   $('.start').hide();
@@ -16,6 +21,9 @@ $('.userName').submit(function(e){
   e.preventDefault();
   var user_input = $('.modalInput').val();
   socket.emit('userReg', user_input);
+  socket.on('userList', onlineList);
+  socket.on('tick', displayTimer);
+  socket.on('message', addMessage);
     // run gameStart();
     var nickname = user_input;
     console.log(nickname);
@@ -43,7 +51,7 @@ modal.keyup(function(e){
 
 $('.close').on('click', function(){
   $('.nicknameModal').hide();
-
+  $('.start').show();
   // gameStart();
 })
 
@@ -51,7 +59,8 @@ $('.close').on('click', function(){
 var gameStart = function(){
     console.log('game has started!');
     timer.hide();
-}
+    $('.waiting').hide();
+};
 
 var onlineList = function(nicknames){
   $('.onlineList').html(nicknames.map(function(nickname){return $("<div>" + nickname + "</div>")}));
@@ -62,19 +71,26 @@ var addMessage = function(message){
 
 var displayTimer = function(){
   $('.timerWrap').show();
-  $('.start').show();
+  // .premature code for later possibly
+  // $('.premature').show();
+  // $('.premature').html("Click to Start Early");
   $('.waiting').html("Waiting for opponents to join");
-  $('.start').html("Click to Start Early");
+}
+
+var showHand = function(cards){
+  var random = Math.floor((Math.random()* 459)+1);
+  console.log(cards)
+    for(i=0;i<=6;i++){
+      console.log(cards.whiteCards[random]);
+    }
+
 }
 
 var runTimer = function(formattedTime){
   timer.html(formattedTime);
   console.log('timer running!');
 };
-
+socket.on('cardList', showHand);
 socket.on('gameStart', gameStart);
-socket.on('tick', displayTimer);
 socket.on('tick', runTimer);
-socket.on('message', addMessage);
-socket.on('userList', onlineList);
 });

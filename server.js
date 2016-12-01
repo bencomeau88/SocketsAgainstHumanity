@@ -1,11 +1,22 @@
-var socket_io = require('socket.io');
+// variables and stuff
 var onlineObj = {};
-var express = require('express');
-var http = require('http');
-var Timer = require('timrjs');
-var timer = Timer(30);
-var app = express();
 var onlineList = [];
+
+// requirements
+var socket_io = require('socket.io');
+var express = require('express');
+var Timer = require('timrjs');
+var http = require('http');
+
+// convert cards json to variables then send them to the front end
+var cards = require('./cards.json');
+console.log(cards.blackCards[0]);
+
+// timer stuff
+var timer = Timer(30);
+
+var app = express();
+
 app.use(express.static('public'));
 
 var server = http.Server(app);
@@ -13,6 +24,7 @@ var io = socket_io(server);
 
 io.on('connection', function(socket){
   console.log('client connected');
+  io.emit('cardList', cards);
   socket.on('message', function(message){
     console.log('message recieved', message);
     socket.broadcast.emit('message', message);

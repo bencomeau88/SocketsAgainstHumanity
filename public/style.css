@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:700&text=css');
 @import url('https://fonts.googleapis.com/css?family=Kaushan+Script&text=!');
 @import url('https://fonts.googleapis.com/css?family=Arimo');
+@import url('https://fonts.googleapis.com/css?family=Arimo:700');
 /*@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');*/
 /*nice grey background color, but does it match? #dbd9da*/
 
@@ -10,7 +11,7 @@
   text-decoration: none;
 }
 
-.start{
+.premature{
   width:100%;
   font-size:10px;
   padding-top:20px;
@@ -28,25 +29,26 @@
   letter-spacing:3px;
   text-align:center;
   color:white;
-
+  text-transform:uppercase; 
 }
 
 .timer {
   width:auto;
   display:block;
-  height:130px;
-  float:left;
+  height:71px;
+  text-align:center;
   overflow:hidden;
   color:white;
+  font-size:70px;
 }
 
 .timerWrap {
   color: white;
-  width: 300px;
-  height: 300px;
+  width: 500px;
+  height: 500px;
   position: absolute;
-  top: 50%;
-  left:50%;
+  top: 44%;
+  left:35%;
   display:none;
 }
 
