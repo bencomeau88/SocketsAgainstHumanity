@@ -67,10 +67,10 @@ io.on('connection', function(socket){
   });
 
   socket.on('cardSubmitted', function(submittedCard){
-    console.log(submittedCard);
       answers.push(submittedCard);
       deck.removeWhiteCard();
       var draw = deck.getWhiteCard();
+      console.log(draw);
       socket.emit('cardDeleted', draw);
   });
 

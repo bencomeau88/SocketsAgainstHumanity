@@ -92,24 +92,28 @@ var showHand = function(cards){
     $('.submitBtn').append("<div class='submit'> Submit </div>");
 };
 
-var updateHand = function(submittedCard, draw){
+var removeCard = function(submittedCard){
   // remove the submitted card
     console.log($("div.clickedWhiteCard:contains('" + submittedCard + "')"));
     $("div.clickedWhiteCard:contains('" + submittedCard + "')").remove();
-  // add a new card from the deck
-    $('.playerCards').append("<div class='whiteCard'>" + draw + "</div>")
+
 };
+// add a new card from the deck
+var drawCard = function(draw){
+  $('.playerCards').append("<div class='whiteCard'>" + draw + "</div>")
+}
 
 $('.submitBtn').on('click', function(){
   var submittedCard = $('.clickedWhiteCard').text();
   // console.log(submittedCard);
   socket.emit('cardSubmitted', submittedCard);
-  updateHand(submittedCard);
+  removeCard(submittedCard);
 });
 
 // socket event functions
 // socket.on('questionMaster', setQuestionMaster);
-socket.on('cardDeleted', updateHand);
+socket.on('cardDeleted', drawCard);
+socket.on('cardDeleted', removeCard);
 socket.on('cardList', showHand);
 socket.on('gameStart', gameStart);
 socket.on('tick', runTimer);
