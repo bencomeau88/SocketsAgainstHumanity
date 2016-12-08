@@ -1,5 +1,7 @@
 // Global Variables
 var hand = 0;
+var host = false;
+var submittedCard = '';
 
 $(document ).ready(function(){
 var socket = io();
@@ -77,19 +79,37 @@ var displayTimer = function(){
   $('.waiting').html("Waiting for opponents to join");
 }
 
-var showHand = function(cards){
-  var random = Math.floor((Math.random()* 459)+1);
-  console.log(cards)
-    for(i=0;i<=6;i++){
-      console.log(cards.whiteCards[random]);
-    }
-
-}
-
 var runTimer = function(formattedTime){
   timer.html(formattedTime);
   console.log('timer running!');
 };
+
+var showHand = function(cards){
+  console.log(cards)
+      cards.forEach(function(card){
+      $('.playerCards').append("<div class='whiteCard'>" + card + "</div>");
+    });
+    $('.submitBtn').append("<div class='submit'> Submit </div>");
+};
+
+var updateHand = function(submittedCard, draw){
+  // remove the submitted card
+    console.log($("div.clickedWhiteCard:contains('" + submittedCard + "')"));
+    $("div.clickedWhiteCard:contains('" + submittedCard + "')").remove();
+  // add a new card from the deck
+    $('.playerCards').append("<div class='whiteCard'>" + draw + "</div>")
+};
+
+$('.submitBtn').on('click', function(){
+  var submittedCard = $('.clickedWhiteCard').text();
+  // console.log(submittedCard);
+  socket.emit('cardSubmitted', submittedCard);
+  updateHand(submittedCard);
+});
+
+// socket event functions
+// socket.on('questionMaster', setQuestionMaster);
+socket.on('cardDeleted', updateHand);
 socket.on('cardList', showHand);
 socket.on('gameStart', gameStart);
 socket.on('tick', runTimer);
