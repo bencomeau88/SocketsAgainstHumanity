@@ -1,72 +1,81 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>Sockets Against Humanity</title>
     <link rel="stylesheet" href="./style.css" media="screen" title="no title">
     <link rel="stylesheet" href="./normalize.css" media="screen" title="no title">
     <source src="http://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js" type="mimetype">
-  </head>
-  <body>
+</head>
 
-<div class="stage start">
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-</div>
-<div class="nicknameModal">
-  <!--should I make this link to an entirely different page?  -->
-  <div class="modalContent">
-      <p>What is your Nickname? <form class='userName'>
-        <input class="modalInput" type="text" name="nickname" placeholder='Type Your Nickname'>
-        </form>
-        <span class='close'><em> <a href="#"> click to close </em> </a></span>
-      </p>
-  </div>
-</div>
-<!-- <input type="button" name="name" value="Click To Join the Game" class='blueButton'> -->
-<div class="userName"></div>
-<div class="onlineList"></div>
-<div class="messages"></div>
+<body>
 
-<!--Timer-->
-<div class="timerWrap">
-  <h1 class="waiting"></h1>
-  <div class="timer"></div>
-  <!-- if you want to add a feature to start early use this <a> -->
-  <!-- <a href="#" class="premature"></a> -->
-</div>
+    <div class="stage start">
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+    </div>
+    <div class="nicknameModal">
+        <!--should I make this link to an entirely different page?  -->
+        <div class="modalContent">
+            <div class="modalHeader">
+              <span class='close'><em> <a href="#"> X </em> </a></span>
+                <p>What is your Nickname?</p>
+            </div>
+            <form class='userName'>
+                <input class="modalInput" type="text" name="nickname" placeholder='Type Your Nickname'>
+            </form>
+        </div>
+    </div>
+    <!-- <input type="button" name="name" value="Click To Join the Game" class='blueButton'> -->
+    <div class="userName"></div>
+    <div class="onlineList"></div>
+    <div class="messages"></div>
 
-<!-- Cards -->
-<div class="cardsWrapper">
-  <div class="playerCards">
-  </div>
-  <div class="submitBtn"></div>
-</div>
+    <!--Timer-->
+    <div class="timerWrap">
+        <h1 class="waiting"></h1>
+        <div class="timer"></div>
+        <!-- if you want to add a feature to start early use this <a> -->
+        <!-- <a href="#" class="premature"></a> -->
+    </div>
 
-<!-- Javacript-->
-<script src="//code.jquery.com/jquery-2.1.0.js"></script>
-<script src='http://underscorejs.org/underscore-min.js'></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="./main.js"></script>
-<script src="./style.js"></script>
-  </body>
+    <!-- Cards -->
+    <div class="cardsWrapper">
+        <div class="blackCardArea">
+
+        </div>
+        <div class="playerCards">
+        </div>
+        <div class="submitBtn">
+        </div>
+    </div>
+
+    <!-- Javacript-->
+    <script src="//code.jquery.com/jquery-2.1.0.js"></script>
+    <script src='http://underscorejs.org/underscore-min.js'></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./main.js"></script>
+    <script src="./style.js"></script>
+</body>
+
 </html>

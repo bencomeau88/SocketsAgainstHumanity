@@ -1,7 +1,9 @@
 // variables and stuff
 var onlineObj = {};
 var onlineList = [];
+// make an object that tracks the 'state of the turn' ie. which players submitted which cards
 var answers = [];
+// make another 'game state' {} that will track how many points each player has
 
 // requirements
 var socket_io = require('socket.io');
@@ -26,54 +28,69 @@ app.use(express.static('public'));
 var server = http.Server(app);
 var io = socket_io(server);
 
-io.on('connection', function(socket){
-  // console.log('client connected');
-  socket.on('message', function(message){
-    // console.log('message recieved', message);
-    socket.broadcast.emit('message', message);
-  });
-  socket.on('userReg', function(nickname){
-    onlineObj[nickname] = socket;
-    socket.nickname = nickname;
-    onlineList.push(nickname);
-    socket.broadcast.emit('message', nickname + "<em>" + ' has just logged in' + "</em>");
-    if (!timer.isRunning()){
-      timer.ticker(function(formattedTime, percentDone, currentTime, startTime, self){
-        io.emit('tick', formattedTime);
-      });
-      timer.finish(function(){
-        io.emit('gameStart');
-        io.emit('userList', onlineList);
-        // console.log(onlineObj);
-        _.each(onlineObj, function(playerSocket, playerName){
-          var playerHand = [];
-          for(i=0;i<=6;i++){
-            playerHand.push(deck.getWhiteCard())
-          };
-          playerSocket.emit('cardList', playerHand);
+io.on('connection', function(socket) {
+    // console.log('client connected');
+    socket.on('message', function(message) {
+        // console.log('message recieved', message);
+        socket.broadcast.emit('message', message);
+    });
+    socket.on('userReg', function(nickname) {
+        onlineObj[nickname] = socket;
+        socket.nickname = nickname;
+        onlineList.push(nickname);
+        socket.broadcast.emit('message', nickname + "<em>" + ' has just logged in' + "</em>");
+        if (!timer.isRunning()) {
+            timer.ticker(function(formattedTime, percentDone, currentTime, startTime, self) {
+                io.emit('tick', formattedTime);
+            });
+            timer.finish(function() {
+                io.emit('gameStart');
+
+                // get a black card from the deck.js
+                var blackCard = deck.getBlackCard();
+                io.emit('drawBlackCard', blackCard);
+                io.emit('userList', onlineList);
+                // console.log(onlineObj);
+                _.each(onlineObj, function(playerSocket, playerName) {
+                    // resets the played cards for this turn
+                      answers = [];
+                      answers.push({name: playerName, cardsSubmitted: []});
+                    // fills the player hands
+                    var playerHand = [];
+                    for (i = 0; i <= 6; i++) {
+                        playerHand.push(deck.getWhiteCard())
+                    };
+                    playerSocket.emit('cardList', playerHand);
+                });
+            });
+
+            timer.start();
+        }
+        // io.emit('tick', timer);
+    });
+
+    socket.on('disconnect', function() {
+        var index = onlineList.indexOf(socket.nickname);
+        // console.log("this is the index : " + index);
+        var removed = onlineList.splice(index, 1);
+        socket.broadcast.emit('userList', onlineList);
+        socket.broadcast.emit('message', socket.nickname + "<em>" + ' has just logged out' + "</em>");
+    });
+
+    socket.on('cardSubmitted', function(submittedCard) {
+        var answer = answers.find(function(e){
+          return e.name == socket.nickname
         });
-      });
-
-      timer.start();
-    }
-    // io.emit('tick', timer);
-  });
-  socket.on('disconnect', function(){
-    var index = onlineList.indexOf(socket.nickname);
-    // console.log("this is the index : " + index);
-    var removed = onlineList.splice(index, 1);
-    socket.broadcast.emit('userList', onlineList);
-    socket.broadcast.emit('message', socket.nickname + "<em>"  + ' has just logged out' + "</em>");
-  });
-
-  socket.on('cardSubmitted', function(submittedCard){
-      answers.push(submittedCard);
-      deck.removeWhiteCard();
-      var draw = deck.getWhiteCard();
-      console.log(draw);
-      socket.emit('cardDeleted', draw);
-  });
+        // console.log(submittedCard);
+        answer.cardsSubmitted.push(submittedCard);
+        console.log(answer);
+        deck.removeWhiteCard(submittedCard);
+        var draw = deck.getWhiteCard();
+        // console.log(draw);
+        socket.emit('cardDeleted', draw);
+    });
 
 });
+
 
 server.listen(process.env.PORT || 8080);

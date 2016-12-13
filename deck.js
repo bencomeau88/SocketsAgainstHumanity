@@ -17,7 +17,8 @@ var Deck = function(){
   }
 
   this.removeWhiteCard = function(cardSubmitted){
-    return this.whiteCards.splice(0,1,cardSubmitted);
+    var index = this.whiteCards.indexOf(cardSubmitted);
+    return this.whiteCards.splice(index,1);
   }
 }
 
