@@ -6,6 +6,12 @@
 /*@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');*/
 /*nice grey background color, but does it match? #dbd9da*/
 
+.waitingMessage {
+  display:none;
+  color:white;
+  text-align:center;
+}
+
 .blackCardArea {
   color:white;
   text-align:center;

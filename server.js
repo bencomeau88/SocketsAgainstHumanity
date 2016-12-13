@@ -4,7 +4,10 @@ var onlineList = [];
 // make an object that tracks the 'state of the turn' ie. which players submitted which cards
 var answers = [];
 // make another 'game state' {} that will track how many points each player has
-
+// black card
+var blackCard = {};
+// submitted amount
+var submitted = 0;
 // requirements
 var socket_io = require('socket.io');
 var express = require('express');
@@ -45,15 +48,15 @@ io.on('connection', function(socket) {
             });
             timer.finish(function() {
                 io.emit('gameStart');
-
                 // get a black card from the deck.js
-                var blackCard = deck.getBlackCard();
+                blackCard = deck.getBlackCard();
                 io.emit('drawBlackCard', blackCard);
+                console.log(blackCard);
                 io.emit('userList', onlineList);
                 // console.log(onlineObj);
+                answers = [];
                 _.each(onlineObj, function(playerSocket, playerName) {
                     // resets the played cards for this turn
-                      answers = [];
                       answers.push({name: playerName, cardsSubmitted: []});
                     // fills the player hands
                     var playerHand = [];
@@ -83,7 +86,22 @@ io.on('connection', function(socket) {
         });
         // console.log(submittedCard);
         answer.cardsSubmitted.push(submittedCard);
-        console.log(answer);
+
+        _.each(answers, function(cardsSubmitted){
+          console.log(blackCard);
+          if (cardsSubmitted.cardsSubmitted.length == blackCard.pick){
+            socket.emit('answersSubmitted');
+            submitted ++;
+          };
+        });
+
+        console.log(submitted);
+        console.log(onlineList.length);
+
+        if(submitted == onlineList.length){
+          socket.broadcast.emit('turnOver', answers);
+        };
+
         deck.removeWhiteCard(submittedCard);
         var draw = deck.getWhiteCard();
         // console.log(draw);

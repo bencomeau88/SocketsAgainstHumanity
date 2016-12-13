@@ -122,8 +122,23 @@ $(document).ready(function() {
       $('.blackCardArea').append("<h1 class='blackCard'>" + blackCard.text + "</h1>");
     };
 
+    var stopSubmit = function(){
+      $('.submit').hide();
+      $('.waitingMessage').show();
+    };
+
+    var startVoting = function(answers){
+      console.log('hi!');
+      $('.cardsWrapper').hide();
+      answers.cardsSubmitted.forEach(function(card){
+        $('votingWrapper').append("<div class='votingCard whiteCard'>" + card.text + "</div>");
+      })
+    };
+
     // socket event functions
-    // socket.on('questionMaster', setQuestionMaster);
+    // socket.on('questionMaster', setQuestionMaster)
+    socket.on('turnOver', startVoting);
+    socket.on('answersSubmitted', stopSubmit);
     socket.on('drawBlackCard', displayBlackCard);
     socket.on('cardDeleted', drawCard);
     socket.on('cardDeleted', removeCard);
