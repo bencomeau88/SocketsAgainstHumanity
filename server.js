@@ -7,7 +7,7 @@ var answers = [];
 // black card
 var blackCard = {};
 // submitted amount
-var submitted = 0;
+var playersSubmitted = 0;
 // requirements
 var socket_io = require('socket.io');
 var express = require('express');
@@ -87,16 +87,26 @@ io.on('connection', function(socket) {
         // console.log(submittedCard);
         answer.cardsSubmitted.push(submittedCard);
 
+        
         _.each(answers, function(cardsSubmitted){
           console.log(blackCard);
+          console.log(cardsSubmitted);
+          console.log(cardsSubmitted.cardsSubmitted.length);
           if (cardsSubmitted.cardsSubmitted.length == blackCard.pick){
+            console.log("time for answers" + cardsSubmitted.cardsSubmitted.length);
             socket.emit('answersSubmitted');
-            submitted ++;
           };
         });
 
-        if(submitted == onlineList.length){
+        playersSubmitted++;
+
+        console.log("submitted var = " + playersSubmitted);
+        console.log("online list = " + onlineList.length);
+        // end turn when player submits the "cards.pick #"
+        if(playersSubmitted == onlineList.length){
             console.log(socket.nickname);
+            // this event should submit to both players once both players have...
+            // ...submitted their answers
           io.emit('turnOver', answers);
         };
 
