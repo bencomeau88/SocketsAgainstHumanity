@@ -128,15 +128,24 @@ $(document).ready(function() {
     };
 
     var startVoting = function(answers){
-      console.log('hi!');
+      console.log(answers);
       $('.cardsWrapper').hide();
-      answers.cardsSubmitted.forEach(function(card){
-        $('votingWrapper').append("<div class='votingCard whiteCard'>" + card.text + "</div>");
+      answers.forEach(function(card){
+        // console.log(card.cardsSubmitted.text);
+        for(i=0;i<card.cardsSubmitted.length;i++){
+          console.log(card.cardsSubmitted[i]);
+          $('.votingWrapper').append("<div class='votingCard whiteCard'>" + card.cardsSubmitted[i] + "</div>");
+        }
       })
     };
 
+    // var test1 = function(){
+    //   console.log('test');
+    // }
+
     // socket event functions
     // socket.on('questionMaster', setQuestionMaster)
+    // socket.on('test', test1)
     socket.on('turnOver', startVoting);
     socket.on('answersSubmitted', stopSubmit);
     socket.on('drawBlackCard', displayBlackCard);

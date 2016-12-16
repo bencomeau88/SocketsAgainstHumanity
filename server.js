@@ -22,7 +22,7 @@ var deck = new Deck();
 var cards = require('./cards.json');
 
 // timer stuff
-var timer = Timer(2);
+var timer = Timer(10);
 
 var app = express();
 
@@ -95,11 +95,9 @@ io.on('connection', function(socket) {
           };
         });
 
-        console.log(submitted);
-        console.log(onlineList.length);
-
         if(submitted == onlineList.length){
-          socket.broadcast.emit('turnOver', answers);
+            console.log(socket.nickname);
+          io.emit('turnOver', answers);
         };
 
         deck.removeWhiteCard(submittedCard);
