@@ -25,7 +25,7 @@ $(document).ready(function() {
         e.preventDefault();
         var user_input = $('.modalInput').val();
         socket.emit('userReg', user_input);
-        socket.on('userList', onlineList);
+        // socket.on('userList', onlineList);
         socket.on('tick', displayTimer);
         socket.on('message', addMessage);
         // run gameStart();
@@ -117,8 +117,8 @@ $(document).ready(function() {
     });
 
     var displayBlackCard = function(blackCard){
-      pickAmount = blackCard.pick;
-      console.log(blackCard);
+      // pickAmount = blackCard.pick;
+      // console.log(blackCard);
       $('.blackCardArea').append("<h1 class='blackCard'>" + blackCard.text + "</h1>");
     };
 
@@ -132,9 +132,9 @@ $(document).ready(function() {
       $('.cardsWrapper').hide();
       answers.forEach(function(card){
         // console.log(card.cardsSubmitted.text);
-        for(i=0;i<card.cardsSubmitted.length;i++){
-          console.log(card.cardsSubmitted[i]);
-          $('.votingWrapper').append("<div class='votingCard card'>" + card.cardsSubmitted[i] + "</div>");
+        for(i=0;i<card.answers.length;i++){
+          console.log(card.answers[i]);
+          $('.votingWrapper').append("<div class='votingCard card'>" + card.answers[i] + "</div>");
         }
       })
     };
