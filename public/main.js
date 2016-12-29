@@ -123,7 +123,7 @@ $(document).ready(function() {
     };
 
     var stopSubmit = function(){
-      $('.submit').hide();
+      $('.submitBtn').hide();
       $('.waitingMessage').show();
     };
 
@@ -134,7 +134,7 @@ $(document).ready(function() {
         // console.log(card.cardsSubmitted.text);
         for(i=0;i<card.cardsSubmitted.length;i++){
           console.log(card.cardsSubmitted[i]);
-          $('.votingWrapper').append("<div class='votingCard whiteCard'>" + card.cardsSubmitted[i] + "</div>");
+          $('.votingWrapper').append("<div class='votingCard card'>" + card.cardsSubmitted[i] + "</div>");
         }
       })
     };

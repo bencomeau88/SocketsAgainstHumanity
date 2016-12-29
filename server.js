@@ -87,7 +87,6 @@ io.on('connection', function(socket) {
         // console.log(submittedCard);
         answer.cardsSubmitted.push(submittedCard);
 
-        
         _.each(answers, function(cardsSubmitted){
           console.log(blackCard);
           console.log(cardsSubmitted);
@@ -95,16 +94,15 @@ io.on('connection', function(socket) {
           if (cardsSubmitted.cardsSubmitted.length == blackCard.pick){
             console.log("time for answers" + cardsSubmitted.cardsSubmitted.length);
             socket.emit('answersSubmitted');
+            playersSubmitted++;
           };
         });
-
-        playersSubmitted++;
 
         console.log("submitted var = " + playersSubmitted);
         console.log("online list = " + onlineList.length);
         // end turn when player submits the "cards.pick #"
         if(playersSubmitted == onlineList.length){
-            console.log(socket.nickname);
+            console.log("this person has submitted enough cards " + socket.nickname);
             // this event should submit to both players once both players have...
             // ...submitted their answers
           io.emit('turnOver', answers);
