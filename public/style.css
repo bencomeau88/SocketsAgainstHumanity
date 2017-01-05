@@ -6,6 +6,38 @@
 /*@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');*/
 /*nice grey background color, but does it match? #dbd9da*/
 
+.submit2 {
+  background-color: black;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    height: 38px;
+    margin-top: -3px;
+    border: 2px solid white;
+    font: white;
+    color: white;
+    padding-top: 16px;
+}
+
+.submit2:hover {
+  background-color:white;
+  margin: 0px 5px 0px 5px;
+  color:black;
+}
+
+.clickedVoteCard {
+  background-color:black;
+  color:white;
+  border: 2px solid white;
+  border-radius:5px;
+	height: 200px;
+	width: 115%;
+	padding: 10px;
+	font-weight: bold;
+	margin-bottom: 10px;
+  margin-right:5px;
+}
+
 .waitingMessage {
   display:none;
   color:white;
@@ -81,8 +113,18 @@
 }*/
 
 .votingWrapper {
-  display:flex;
+  display:block;
   width:50%;
+}
+
+.votingCard {
+  background: white;
+  border-radius:5px;
+  height:200px;
+  padding: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-right:5px;
 }
 
 .card {
@@ -94,6 +136,15 @@
 	font-weight: bold;
 	margin-bottom: 10px;
   margin-right:5px;
+}
+
+.votingCard:hover {
+  margin: 0px 20px 0px 20px;
+  vertical-align: middle;
+  transform: scale(0.98);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+  transition-duration: 0.3s;
+  transition-property: box-shadow, transform;
 }
 
 .whiteCard {

@@ -30,7 +30,7 @@ $(document).ready(function() {
         socket.on('message', addMessage);
         // run gameStart();
         var nickname = user_input;
-        console.log(nickname);
+        // console.log(nickname);
         modal.hide();
     });
 
@@ -134,9 +134,32 @@ $(document).ready(function() {
         // console.log(card.cardsSubmitted.text);
         for(i=0;i<card.answers.length;i++){
           console.log(card.answers[i]);
-          $('.votingWrapper').append("<div class='votingCard card'>" + card.answers[i] + "</div>");
+          $('.votingCards').append("<div class='votingCard'>" + card.answers[i] + "</div>");
         }
       })
+      $('.votingBtn').append("<div class='submit2'> Submit </div>");
+    };
+
+    $('.votingBtn').on('click', function() {
+        var votedCard = $('.clickedVoteCard').text();
+        console.log(votedCard);
+        // console.log(submittedCard);
+        socket.emit('cardVoted', votedCard);
+        removeVoteCard(votedCard);
+        $('.votingBtn').hide();
+    });
+
+    var removeVoteCard = function(votedCard) {
+        // remove the submitted card
+        console.log($("div.clickedVoteCard:contains('" + votedCard + "')"));
+        $("div.clickedVoteCard:contains('" + votedCard + "')").remove();
+    };
+
+    var displayCards = function(){
+      $('.cardsWrapper').show();
+      $('.waitingMessage').hide();
+      $('.submitBtn').show();
+      $('.votingCards').hide();
     };
 
     // var test1 = function(){
@@ -146,11 +169,10 @@ $(document).ready(function() {
     // socket event functions
     // socket.on('questionMaster', setQuestionMaster)
     // socket.on('test', test1)
+    socket.on('newTurn', displayCards);
     socket.on('turnOver', startVoting);
     socket.on('answersSubmitted', stopSubmit);
     socket.on('drawBlackCard', displayBlackCard);
-    socket.on('cardDeleted', drawCard);
-    socket.on('cardDeleted', removeCard);
     socket.on('cardList', showHand);
     socket.on('gameStart', gameStart);
     socket.on('tick', runTimer);

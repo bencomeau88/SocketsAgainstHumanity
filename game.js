@@ -1,10 +1,8 @@
 var Deck = require('./deck.js').Deck;
-var Timer = require('timrjs');
 var _ = require('underscore');
 
 var game = {
   started: false,
-  timer: Timer(6),
   players: [],
   deck: new Deck(),
   blackCard: null,
@@ -13,6 +11,7 @@ var game = {
     player.hand = [],
     player.answers = [];
     player.vote = null;
+    player.handScore = 0;
     player.score = 0;
     this.players.push(player);
   },
@@ -83,7 +82,7 @@ var game = {
       player.answers = [];
       player.vote = null;
     });
-    this.blackCard = deck.getBlackCard();
+    this.blackCard = this.deck.getBlackCard();
   }
 };
 

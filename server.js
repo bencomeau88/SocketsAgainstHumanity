@@ -5,47 +5,51 @@ var express = require('express');
 var socket_io = require('socket.io');
 var game = require('./game.js');
 
+// timer
+var Timer = require('timrjs');
+var timer = Timer(8);
+
 var app = express();
 var server = http.Server(app);
 var io = socket_io(server);
 
-var onlineObj = {};
-var onlineList = [];
+// var onlineObj = {};
+// var onlineList = [];
 
 app.use(express.static('public'));
 
 io.on('connection', function(socket) {
-
-  game.timer.ticker(function(formattedTime) {
-    io.emit('tick', formattedTime);
-  });
-
-  game.timer.finish(function() {
-    io.emit('gameStart');
-    game.start();
-    // get a black card from the deck.js
-    io.emit('drawBlackCard', game.blackCard);
-    console.log(game.players);
-    _.each(game.players, function(player) {
-      player.emit('cardList', player.hand);
-    });
-  });
+  console.log('connecting');
 
   socket.on('message', function(message) {
     socket.broadcast.emit('message', message);
   });
 
   socket.on('userReg', function(nickname) {
+
     if (!game.started) {
       game.addPlayer(socket, nickname);
-      socket.broadcast.emit('message', nickname + "<em>" + ' has just logged in' + "</em>");
-
-      if (!game.timer.isRunning()) {
-        game.timer.start();
-      }
+      socket.join('gameRoom');
+      socket.broadcast.emit('message', nickname + "<em>" + ' has just logged into the game room' + "</em>");
     } else {
-      socket.emit('message', 'Game already started :(');
+      socket.emit('message', 'Game already started :( ');
     }
+
+    if(!timer.isRunning()) {
+      timer.ticker(function(formattedTime){
+        io.in('gameRoom').emit('tick', formattedTime);
+      });
+      timer.finish(function(){
+        io.in('gameRoom').emit('gameStart');
+        game.start();
+        io.in('gameRoom').emit('drawBlackCard', game.blackCard);
+        _.each(game.players, function(player) {
+          player.emit('cardList', player.hand);
+        });
+      })
+      timer.start();
+    }
+
   });
 
   socket.on('disconnect', function() {
@@ -72,15 +76,15 @@ io.on('connection', function(socket) {
     }
   });
 
-  socket.on('cardVoted', function(cardVoted){
-    var voted = game.cardVoted(socket, card);
+
+  socket.on('cardVoted', function(votedCard){
+    var voted = game.cardVoted(socket, votedCard);
     if (!voted) { socket.emit('message', 'Cant play'); }
     else {
-      socket.emit('cardVoted');
       if (game.everyoneVoted()) {
-        io.emit('votingOver', game.playersVotes());
-        game.scoring();
-        io.emit('score', game.playersScore());
+        // io.emit('votingOver', game.playersVotes());
+        game.voteScoring();
+        // io.emit('score', game.playersScore());
         game.newTurn();
         io.emit('newTurn');
       }
