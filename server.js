@@ -19,88 +19,86 @@ var io = socket_io(server);
 app.use(express.static('public'));
 
 io.on('connection', function(socket) {
-  console.log('connecting');
+    console.log('connecting');
 
-  socket.on('message', function(message) {
-    socket.broadcast.emit('message', message);
-  });
+    socket.on('message', function(message) {
+        socket.broadcast.emit('message', message);
+    });
 
-  socket.on('userReg', function(nickname) {
+    socket.on('userReg', function(nickname) {
 
-    if (!game.started) {
-      game.addPlayer(socket, nickname);
-      socket.join('gameRoom');
-      socket.broadcast.emit('message', nickname + "<em>" + ' has just logged into the game room' + "</em>");
-    } else {
-      socket.emit('message', 'Game already started :( ');
-    }
+        if (!game.started) {
+            game.addPlayer(socket, nickname);
+            socket.join('gameRoom');
+            socket.broadcast.emit('message', nickname + "<em>" + ' has just logged into the game room' + "</em>");
+        } else {
+            socket.emit('message', 'Game already started :( ');
+        }
 
-    if(!timer.isRunning()) {
-      timer.ticker(function(formattedTime){
-        io.in('gameRoom').emit('tick', formattedTime);
-      });
-      timer.finish(function(){
-        io.in('gameRoom').emit('gameStart');
-        _.each(game.players, function(player){
-          var info = [player.nickname, player.score];
-        io.in('gameRoom').emit('players', info);
-      });
-        game.start();
-        io.in('gameRoom').emit('drawBlackCard', game.blackCard);
-        _.each(game.players, function(player) {
-          player.emit('cardList', player.hand);
-        });
-      })
-      timer.start();
-    }
+        if (!timer.isRunning()) {
+            timer.ticker(function(formattedTime) {
+                io.in('gameRoom').emit('tick', formattedTime);
+            });
+            timer.finish(function() {
+                io.in('gameRoom').emit('gameStart');
+                // _.each(game.players, function(player){
+                //   var info = [player.nickname, player.score];
+                io.in('gameRoom').emit('players', game.getScores());
+            });
+            game.start();
+            io.in('gameRoom').emit('drawBlackCard', game.blackCard);
+            _.each(game.players, function(player) {
+                player.emit('cardList', player.hand);
+            });
+        }
+        timer.start();
+    })
 
-  });
+});
 
-  socket.on('cardSubmitted', function(submittedCard) {
+socket.on('cardSubmitted', function(submittedCard) {
     var played = game.cardSubmitted(socket, submittedCard);
 
     if (!played) {
-      socket.emit('message', 'Cannot play any more cards this turn.');
+        socket.emit('message', 'Cannot play any more cards this turn.');
     } else {
-      if (game.playerPlayed(socket)) {
-        socket.emit('answersSubmitted');
-      }
+        if (game.playerPlayed(socket)) {
+            socket.emit('answersSubmitted');
+        }
     }
     if (game.everyonePlayed()) {
-      io.emit('turnOver', game.playersAnswers());
+        io.emit('turnOver', game.playersAnswers());
     }
-  });
+});
 
 
-  socket.on('cardVoted', function(votedCard){
+socket.on('cardVoted', function(votedCard) {
     var voted = game.cardVoted(socket, votedCard);
-    if (!voted) { socket.emit('message', 'Cant play'); }
-    else
-    {
-      if (game.everyoneVoted()) {
-        // io.emit('votingOver', game.playersVotes());
-        game.voteScoring();
-        // io.emit('score', game.playersScore());
-        game.newTurn();
-        _.each(game.players, function(player) {
-          player.emit('newCards', player.hand);
-          var playerInfo = [player.nickname, player.score];
-          io.in('gameRoom').emit('score', playerInfo);
-          console.log(playerInfo);
-        });
-        io.in('gameRoom').emit('newTurn');
-        io.in('gameRoom').emit('drawBlackCard', game.blackCard);
-      }
+    if (!voted) {
+        socket.emit('message', 'Cant play');
+    } else {
+        if (game.everyoneVoted()) {
+            // io.emit('votingOver', game.playersVotes());
+            game.voteScoring();
+            // io.emit('score', game.playersScore());
+            game.newTurn();
+            _.each(game.players, function(player) {
+                player.emit('newCards', player.hand);
+            });
+            io.in('gameRoom').emit('score', game.getScores())
+            io.in('gameRoom').emit('newTurn');
+            io.in('gameRoom').emit('drawBlackCard', game.blackCard);
+        }
     }
-  });
+});
 
-  socket.on('disconnect', function() {
-    if (socket.nickname) {
-      game.removePlayer(socket);
-      socket.broadcast.emit('message', socket.nickname + "<em>" + ' has just logged out' + "</em>");
-    }
-    // socket.broadcast.emit('userList', onlineList);
-  });
+socket.on('disconnect', function() {
+if (socket.nickname) {
+    game.removePlayer(socket);
+    socket.broadcast.emit('message', socket.nickname + "<em>" + ' has just logged out' + "</em>");
+}
+// socket.broadcast.emit('userList', onlineList);
+});
 });
 
 server.listen(process.env.PORT || 8080);

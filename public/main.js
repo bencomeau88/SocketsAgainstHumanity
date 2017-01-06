@@ -152,23 +152,27 @@ $(document).ready(function() {
         $('.votingBtn').html("");
     });
 
-    var updateScores = function(player){
+    var updateScores = function(players){
       // @TODO best way to update scores?
       // $('.score').children().empty();
-      console.log(player);
-      var nickname = player[0];
-      var score = player[1];
-      var newElement = "<div class=" + nickname + "> <h2>" + nickname + "'s score is:" + "</h2> <br>" + score + "</div>";
-      if ($("div").hasClass(nickname)){
-        console.log(player);
-      $('div.' + nickname).replaceWith(newElement);
-      }
+      displayScoreBar(players);
+      // console.log(player);
+      // var nickname = player[0];
+      // var score = player[1];
+      // var newElement = "<div class=" + nickname + "> <h2>" + nickname + "'s score is:" + "</h2> <br>" + score + "</div>";
+      // if ($("div").hasClass(nickname)){
+      //   console.log(player);
+      // $('div.' + nickname).replaceWith(newElement);
+      // }
     };
 
-    var displayScoreBar = function(player){
-      var nickname = player[0];
-      var score = player[1];
+    var displayScoreBar = function(players){
+      $('.score').empty();
+      _.each(players, function(player){
+      var nickname = player.nickname;
+      var score = player.score;
       $('.score').append("<div class=" + nickname + "> <h2>" + nickname + "'s score is:" + "</h2> <br>" + score + "</div>");
+    });
     };
 
     // socket event functions

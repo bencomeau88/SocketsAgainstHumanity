@@ -72,6 +72,12 @@ var game = {
       owner.score++;
     }, this)
   },
+
+  getScores: function(){
+    return _.map(game.players, function(player){
+      return {nickname: player.nickname, score: player.score};
+    });
+  }
   newTurn: function(){
     _.each(this.players, function(player){
       var missingCards = 6 - player.hand.length;
