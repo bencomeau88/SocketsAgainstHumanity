@@ -63,7 +63,7 @@ var game = {
   },
   findAnswerOwner: function(card) {
     return _.find(this.players, function(player){
-        return player
+      return _.contains(player.answers, card)
       }, this)
   },
   voteScoring: function(){
@@ -77,14 +77,14 @@ var game = {
     return _.map(game.players, function(player){
       return {nickname: player.nickname, score: player.score};
     });
-  }
+  },
+
   newTurn: function(){
     _.each(this.players, function(player){
       var missingCards = 6 - player.hand.length;
       for (i = 0; i < missingCards; i++) {
         player.hand.push(this.deck.getWhiteCard());
       };
-      console.log(player.score);
       player.answers = [];
       player.vote = null;
       this.blackCard = this.deck.getBlackCard();

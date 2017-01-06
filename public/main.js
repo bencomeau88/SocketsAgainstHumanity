@@ -153,7 +153,6 @@ $(document).ready(function() {
     });
 
     var updateScores = function(players){
-      // @TODO best way to update scores?
       // $('.score').children().empty();
       displayScoreBar(players);
       // console.log(player);

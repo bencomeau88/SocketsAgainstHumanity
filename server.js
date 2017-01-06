@@ -44,15 +44,14 @@ io.on('connection', function(socket) {
                 // _.each(game.players, function(player){
                 //   var info = [player.nickname, player.score];
                 io.in('gameRoom').emit('players', game.getScores());
-            });
             game.start();
             io.in('gameRoom').emit('drawBlackCard', game.blackCard);
             _.each(game.players, function(player) {
                 player.emit('cardList', player.hand);
             });
-        }
+        });
         timer.start();
-    })
+    }
 
 });
 
