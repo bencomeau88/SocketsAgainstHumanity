@@ -41,6 +41,10 @@ io.on('connection', function(socket) {
       });
       timer.finish(function(){
         io.in('gameRoom').emit('gameStart');
+        _.each(game.players, function(player){
+          var info = [player.nickname, player.score];
+        io.in('gameRoom').emit('players', info);
+      });
         game.start();
         io.in('gameRoom').emit('drawBlackCard', game.blackCard);
         _.each(game.players, function(player) {
@@ -50,14 +54,6 @@ io.on('connection', function(socket) {
       timer.start();
     }
 
-  });
-
-  socket.on('disconnect', function() {
-    if (socket.nickname) {
-      game.removePlayer(socket);
-      socket.broadcast.emit('message', socket.nickname + "<em>" + ' has just logged out' + "</em>");
-    }
-    // socket.broadcast.emit('userList', onlineList);
   });
 
   socket.on('cardSubmitted', function(submittedCard) {
@@ -81,18 +77,29 @@ io.on('connection', function(socket) {
     if (!voted) { socket.emit('message', 'Cant play'); }
     else
     {
-      // if (game.everyoneVoted()) {
+      if (game.everyoneVoted()) {
         // io.emit('votingOver', game.playersVotes());
         game.voteScoring();
         // io.emit('score', game.playersScore());
         game.newTurn();
         _.each(game.players, function(player) {
           player.emit('newCards', player.hand);
+          var playerInfo = [player.nickname, player.score];
+          io.in('gameRoom').emit('score', playerInfo);
+          console.log(playerInfo);
         });
         io.in('gameRoom').emit('newTurn');
         io.in('gameRoom').emit('drawBlackCard', game.blackCard);
-      // }
+      }
     }
+  });
+
+  socket.on('disconnect', function() {
+    if (socket.nickname) {
+      game.removePlayer(socket);
+      socket.broadcast.emit('message', socket.nickname + "<em>" + ' has just logged out' + "</em>");
+    }
+    // socket.broadcast.emit('userList', onlineList);
   });
 });
 

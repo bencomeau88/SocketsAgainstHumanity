@@ -63,7 +63,7 @@ var game = {
   },
   findAnswerOwner: function(card) {
     return _.find(this.players, function(player){
-        return _.contains(player.answers, card);
+        return player
       }, this)
   },
   voteScoring: function(){

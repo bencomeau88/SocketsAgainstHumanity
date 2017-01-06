@@ -85,7 +85,7 @@ $(document).ready(function() {
         $('.playerCards').html("");
         $('.blackCardArea').html("");
         $('.submitBtn').html("");
-        $('.waitingMessageWrapper').html("");
+        $('.waitingMessageWrapper').hide();
         console.log(cards)
         $('.cardsWrapper').show();
         $('.submitBtn').show();
@@ -146,15 +146,35 @@ $(document).ready(function() {
     $('.votingBtn').on('click', function() {
         var votedCard = $('.clickedVoteCard').text();
         console.log(votedCard);
-        @// TODO: if you have a pick:2+ blackcard property you should be able to vote more
+        // @ TODO: if you have a pick:2+ blackcard property you should be able to vote more
         socket.emit('cardVoted', votedCard);
         removeVoteCard(votedCard);
         $('.votingBtn').html("");
     });
 
+    var updateScores = function(player){
+      // @TODO best way to update scores?
+      // $('.score').children().empty();
+      console.log(player);
+      var nickname = player[0];
+      var score = player[1];
+      var newElement = "<div class=" + nickname + "> <h2>" + nickname + "'s score is:" + "</h2> <br>" + score + "</div>";
+      if ($("div").hasClass(nickname)){
+        console.log(player);
+      $('div.' + nickname).replaceWith(newElement);
+      }
+    };
+
+    var displayScoreBar = function(player){
+      var nickname = player[0];
+      var score = player[1];
+      $('.score').append("<div class=" + nickname + "> <h2>" + nickname + "'s score is:" + "</h2> <br>" + score + "</div>");
+    };
 
     // socket event functions
     // socket.on('newTurn', displayCards);
+    socket.on('players', displayScoreBar);
+    socket.on('score', updateScores);
     socket.on('newCards', showNewHand);
     socket.on('turnOver', startVoting);
     socket.on('answersSubmitted', stopSubmit);

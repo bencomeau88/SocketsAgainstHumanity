@@ -6,6 +6,14 @@
 /*@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');*/
 /*nice grey background color, but does it match? #dbd9da*/
 
+.rightSideBar {
+  position:absolute;
+  left:90%;
+  width:150px;
+  color:white;
+  float:right;
+}
+
 .submit2 {
   background-color: black;
     border-radius: 5px;
