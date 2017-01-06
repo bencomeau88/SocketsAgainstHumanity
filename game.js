@@ -11,7 +11,6 @@ var game = {
     player.hand = [],
     player.answers = [];
     player.vote = null;
-    player.handScore = 0;
     player.score = 0;
     this.players.push(player);
   },
@@ -24,7 +23,7 @@ var game = {
     this.blackCard = this.deck.getBlackCard();
     // populate player hand
     _.each(this.players, function(player){
-      for (i = 0; i <= 6; i++) {
+      for (i = 0; i <= 5; i++) {
         player.hand.push(this.deck.getWhiteCard());
       };
     }, this);
@@ -76,13 +75,14 @@ var game = {
   newTurn: function(){
     _.each(this.players, function(player){
       var missingCards = 6 - player.hand.length;
-      for (i = 0; i <= missingCards; i++) {
+      for (i = 0; i < missingCards; i++) {
         player.hand.push(this.deck.getWhiteCard());
       };
+      console.log(player.score);
       player.answers = [];
       player.vote = null;
-    });
-    this.blackCard = this.deck.getBlackCard();
+      this.blackCard = this.deck.getBlackCard();
+    }, this);
   }
 };
 

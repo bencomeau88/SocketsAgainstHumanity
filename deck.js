@@ -10,6 +10,7 @@ var Deck = function(){
   this.getWhiteCard = function(){
     // returns 1 element but also removes it from the array
     return this.whiteCards.pop()
+
   }
 
   this.getBlackCard = function(){

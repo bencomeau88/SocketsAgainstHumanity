@@ -70,7 +70,6 @@ io.on('connection', function(socket) {
         socket.emit('answersSubmitted');
       }
     }
-
     if (game.everyonePlayed()) {
       io.emit('turnOver', game.playersAnswers());
     }
@@ -80,14 +79,19 @@ io.on('connection', function(socket) {
   socket.on('cardVoted', function(votedCard){
     var voted = game.cardVoted(socket, votedCard);
     if (!voted) { socket.emit('message', 'Cant play'); }
-    else {
-      if (game.everyoneVoted()) {
+    else
+    {
+      // if (game.everyoneVoted()) {
         // io.emit('votingOver', game.playersVotes());
         game.voteScoring();
         // io.emit('score', game.playersScore());
         game.newTurn();
-        io.emit('newTurn');
-      }
+        _.each(game.players, function(player) {
+          player.emit('newCards', player.hand);
+        });
+        io.in('gameRoom').emit('newTurn');
+        io.in('gameRoom').emit('drawBlackCard', game.blackCard);
+      // }
     }
   });
 });
